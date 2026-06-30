@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>R64 阳光时长 · 表端高保真</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --amber:#F5B324;--amber-d:#E89512;--honey:#FFD45E;--leaf:#5FCf7E;--clay:#FF8A4B;
+    --serif:'Bricolage Grotesque',serif;--sans:'Sora',-apple-system,"PingFang SC",sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:var(--sans);
+    background:radial-gradient(1000px 480px at 18% -10%,#F7E8C6 0%,rgba(247,232,198,0) 55%),
+      radial-gradient(760px 420px at 90% 2%,#F1E3CC 0%,rgba(241,227,204,0) 50%),#FBF6EC;
+    padding:48px 34px 80px;color:#2A241C}
+  .head{max-width:1180px;margin:0 auto 30px}
+  .kick{display:inline-flex;align-items:center;gap:9px;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--amber-d);background:#fff;padding:9px 17px;border-radius:999px;box-shadow:0 5px 20px rgba(232,163,23,.16)}
+  .kick::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--amber);box-shadow:0 0 0 4px rgba(232,163,23,.22)}
+  h1{font-family:var(--serif);font-size:42px;font-weight:800;letter-spacing:-.02em;margin:16px 0 10px}
+  h1 em{font-style:normal;color:var(--amber-d)}
+  .sub{font-size:14.5px;color:#736A5C;max-width:720px;line-height:1.7}
+
+  .zone{max-width:1180px;margin:0 auto 20px;background:rgba(255,255,255,.66);border:1px solid #ECE3D2;border-radius:24px;padding:24px 26px;backdrop-filter:blur(6px)}
+  .zt{font-size:16px;font-weight:800;display:flex;align-items:center;gap:10px;margin-bottom:5px}
+  .zt .b{font-size:10.5px;font-weight:800;color:#fff;background:#2A241C;padding:4px 11px;border-radius:7px;letter-spacing:.03em}
+  .zt .b.alt{background:var(--amber-d)}
+  .zd{font-size:12.5px;color:#8a8276;margin-bottom:20px;line-height:1.55}
+  .flow{display:flex;gap:30px;align-items:center;flex-wrap:wrap}
+  .arrow{font-size:20px;color:#C9BBA0;font-weight:700}
+  .item{display:flex;flex-direction:column;align-items:center;gap:11px}
+  .item .cap{font-size:12px;font-weight:700;color:#2A241C}
+  .item .scap{font-size:10.5px;color:#A89E8C}
+
+  /* 圆表 */
+  .watch{width:196px;height:196px;border-radius:50%;background:#0B0B0D;padding:6px;position:relative;
+    box-shadow:0 16px 38px -12px rgba(80,55,15,.4),inset 0 0 0 2px #26241f,0 0 0 1px rgba(0,0,0,.3)}
+  .wscr{width:100%;height:100%;border-radius:50%;background:radial-gradient(circle at 50% 36%,#161310,#000);overflow:hidden;position:relative;color:#fff}
+  .pad{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 26px}
+  .wtime{position:absolute;top:16px;left:0;right:0;text-align:center;font-size:10px;color:#8a8378;font-weight:600;letter-spacing:.02em}
+
+  /* 定位豆 */
+  .dots{position:absolute;bottom:14px;left:0;right:0;display:flex;justify-content:center;gap:5px}
+  .dots i{width:5px;height:5px;border-radius:50%;background:#3a3630;transition:.2s}
+  .dots i.on{background:var(--amber);width:15px;border-radius:3px}
+
+  /* 太阳笑脸环 */
+  .ringwrap{position:relative;width:128px;height:128px}
+  .ringwrap svg{position:absolute;inset:0;transform:rotate(-90deg)}
+  .sun{position:absolute;inset:22px;border-radius:50%;
+    background:radial-gradient(circle at 42% 36%,#FFE89A,#F8BE34 68%,#EC9A12);
+    box-shadow:0 4px 14px rgba(245,179,36,.5);display:grid;place-items:center}
+  .face{width:100%;height:100%;position:relative}
+  .eye{position:absolute;top:37%;width:8px;height:11px;background:#6B3D00;border-radius:50%}
+  .eye.l{left:30%}.eye.r{right:30%}
+  .mouth{position:absolute;left:50%;top:53%;transform:translateX(-50%);width:24px;height:13px;border-bottom:4px solid #6B3D00;border-radius:0 0 26px 26px}
+  .cheek{position:absolute;top:55%;width:9px;height:6px;background:rgba(236,90,40,.4);border-radius:50%}
+  .cheek.l{left:19%}.cheek.r{right:19%}
+  .sunval{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center}
+  .sunval .n{font-family:var(--serif);font-size:22px;font-weight:800;color:#fff;line-height:1}
+  .sunval .n small{font-size:10px;color:#bbb}
+
+  .undertxt{position:absolute;bottom:30px;left:0;right:0;text-align:center;font-size:10.5px;font-weight:600}
+  .undertxt .g{color:#9a9388}.undertxt .ok{color:var(--leaf);font-weight:700}
+
+  /* 二屏紫外线 */
+  .uvnum{font-family:var(--serif);font-size:30px;font-weight:800;color:var(--amber)}
+  .uvnum small{font-size:11px;color:#aaa;font-weight:600}
+  .uvchart{width:138px;height:42px;position:relative;margin:8px auto 0}
+  .fit{font-size:12px;color:var(--leaf);font-weight:700;margin-top:10px}
+  .fitsub{font-size:9.5px;color:#888;margin-top:3px}
+
+  /* 椭圆长图 */
+  .long{width:208px;border-radius:104px;background:radial-gradient(circle at 50% 16%,#161310,#000);overflow:hidden;color:#fff;padding:44px 26px 40px;box-shadow:0 16px 38px -12px rgba(80,55,15,.4)}
+  .drow{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid #221f1a}
+  .drow:last-of-type{border:none}
+  .drow .l{font-size:12px;color:#d8d2c8;font-weight:600;display:flex;align-items:center;gap:8px}
+  .drow .l .dot{width:8px;height:8px;border-radius:50%}
+  .drow .v{font-size:12.5px;color:#fff;font-weight:700}
+  .barw{height:7px;border-radius:4px;background:#26231d;overflow:hidden;margin-top:8px;position:relative}
+  .barw i{display:block;height:100%}
+  .seg3{position:absolute;top:0;bottom:0;width:1.5px;background:#000}
+  .sectit{font-size:10.5px;font-weight:700;color:var(--amber);margin:15px 0 8px}
+
+  /* 提醒 */
+  .nicon{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;font-size:26px;background:rgba(245,179,36,.14)}
+  .nicon.warn{background:rgba(255,138,75,.16)}
+  .ntit{font-size:14.5px;font-weight:800;margin-top:11px}
+  .ntit.warn{color:var(--clay)}
+  .nbody{font-size:11.5px;color:#b8b2a6;font-weight:500;margin-top:8px;line-height:1.5}
+  .nbtn{font-size:11px;color:#000;font-weight:700;margin-top:13px;background:var(--amber);padding:6px 18px;border-radius:999px}
+
+  /* 表盘 */
+  .face2{position:absolute;inset:0;padding:13px 22px;color:#fff}
+  .f2top{display:flex;justify-content:space-between;align-items:flex-start}
+  .acts{width:42px;height:42px;border-radius:50%;position:relative}
+  .acts .r1{position:absolute;inset:0;border-radius:50%;border:5px solid #3a3630;border-top-color:var(--amber);border-right-color:var(--amber)}
+  .acts .r2{position:absolute;inset:7px;border-radius:50%;border:4px solid #3a3630;border-top-color:var(--leaf);border-left-color:var(--leaf)}
+  .f2t{text-align:right}.f2t .d{font-size:10px;color:#FF6B52;font-weight:700}
+  .f2t .h{font-family:var(--serif);font-size:38px;font-weight:800;line-height:.92;color:#fff}
+  .pill{margin-top:10px;height:38px;border-radius:22px;background:linear-gradient(90deg,#FBC074 0 52%,#171410 52%);display:flex;align-items:center;padding-left:18px;box-shadow:0 3px 10px rgba(0,0,0,.3)}
+  .pill .pt{font-size:11px;font-weight:800;color:#5A3410}.pill .pt small{display:block;font-size:7px;font-weight:600;letter-spacing:.04em}
+  .pilllab{display:flex;justify-content:space-between;font-size:9.5px;color:#b8b2a6;font-weight:600;margin-top:5px}
+  .pilllab .o{color:var(--amber)}
+  .three{display:flex;justify-content:center;gap:10px;margin-top:8px}
+  .tc{width:42px;height:42px;border-radius:50%;border:3.5px solid #3a3630;display:grid;place-items:center;text-align:center;position:relative}
+  .tc.s{border-top-color:var(--amber);border-right-color:var(--amber)}
+  .tc .cn{font-size:13px;font-weight:800;line-height:1}
+  .tc .cl{font-size:6.5px;color:#999;margin-top:2px}
+
+  /* 组件 */
+  .comprow{display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start}
+  .comp{width:84px;height:84px;border-radius:50%;background:radial-gradient(circle at 50% 30%,#161310,#000);display:grid;place-items:center;text-align:center;position:relative;box-shadow:0 8px 20px -8px rgba(0,0,0,.4)}
+  .comp.ringc{box-shadow:0 8px 20px -8px rgba(0,0,0,.4),inset 0 0 0 5px #2a2620,inset 0 0 0 0 transparent}
+  .comp.ringc::before{content:"";position:absolute;inset:0;border-radius:50%;border:5px solid transparent;border-top-color:var(--amber);border-right-color:var(--amber);transform:rotate(20deg)}
+  .comp .cv{font-size:16px;font-weight:800;color:#fff;position:relative}.comp .cv small{font-size:8px;color:#aaa}
+  .comp .cl{font-size:8px;color:#8a8378;font-weight:600;margin-top:2px;position:relative}
+  .comp .ci{font-size:18px}
+
+  .note{max-width:1180px;margin:30px auto 0;font-size:12px;color:#A89E8C;line-height:1.7}
+</style>
+</head>
+<body>
+  <div class="head">
+    <span class="kick">R64 · Watch · Hi-Fi</span>
+    <h1>阳光时长 · <em>表端</em>高保真</h1>
+    <p class="sub">R64 圆表 · 深色省电底 + 蜜琥珀太阳笑脸。主流程(定位豆) / 行动型提醒 / 阳光聚合表盘与可添加组件，延续 App 端情感化设计。</p>
+  </div>
+
+  <!-- 区1 主流程 -->
+  <div class="zone">
+    <div class="zt"><span class="b">主应用</span>页面流 · 定位豆指示当前屏</div>
+    <div class="zd">首屏 ⇄ 二屏 左右切换；首屏上滑进数据详情长图。底部定位豆指示位置。</div>
+    <div class="flow">
+      <!-- 首屏 -->
+      <div class="item">
+        <div class="watch"><div class="wscr">
+          <div class="wtime">14:48 · 阳光时长</div>
+          <div class="pad" style="justify-content:flex-start;padding-top:30px">
+            <div class="ringwrap" style="width:96px;height:96px">
+              <svg width="96" height="96" viewBox="0 0 128 128"><circle cx="64" cy="64" r="57" fill="none" stroke="#26231d" stroke-width="10"/><circle cx="64" cy="64" r="57" fill="none" stroke="#F5B324" stroke-width="10" stroke-linecap="round" stroke-dasharray="358" stroke-dashoffset="48"/></svg>
+              <div class="sun" style="inset:18px"><div class="face"><div class="eye l"></div><div class="eye r"></div><div class="cheek l"></div><div class="cheek r"></div><div class="mouth"></div></div></div>
+            </div>
+          </div>
+          <div class="undertxt" style="bottom:30px"><span style="font-family:var(--serif);font-size:19px;font-weight:800;color:#fff">68<small style="font-size:10px;color:#bbb">分</small></span> <span class="ok" style="margin-left:5px">达成113%</span><div class="g" style="margin-top:2px">目标 60 分钟</div></div>
+          <div class="dots"><i class="on"></i><i></i></div>
+        </div></div>
+        <div class="cap">① 首屏 · 时长+达标</div>
+        <div class="scap">太阳笑脸环 · 抬腕即见</div>
+      </div>
+      <div class="arrow">⇄</div>
+      <!-- 二屏 -->
+      <div class="item">
+        <div class="watch"><div class="wscr">
+          <div class="wtime">紫外线 · 是否适合晒</div>
+          <div class="pad">
+            <div style="font-size:11px;color:#aaa">当前紫外线</div>
+            <div class="uvnum">4<small> 中等</small></div>
+            <div class="uvchart"><svg viewBox="0 0 138 42" preserveAspectRatio="none" style="width:100%;height:100%"><path d="M0,38 C30,34 48,8 69,7 C90,8 110,32 138,38" fill="none" stroke="#F5B324" stroke-width="2" stroke-dasharray="3 3" opacity=".7"/></svg></div>
+            <div class="fit">✓ 现在适合晒太阳</div>
+            <div class="fitsub">维D合成黄金时段</div>
+          </div>
+          <div class="dots"><i></i><i class="on"></i></div>
+        </div></div>
+        <div class="cap">② 二屏 · 紫外线</div>
+        <div class="scap">UV+是否适合晒（切屏）</div>
+      </div>
+      <div class="arrow">↑ 上滑</div>
+      <!-- 三屏长图 -->
+      <div class="item">
+        <div class="long">
+          <div style="text-align:center;font-size:10.5px;color:#8a8378;margin-bottom:12px;font-weight:600">今日数据</div>
+          <div class="drow"><span class="l"><span class="dot" style="background:var(--amber)"></span>阳光时长</span><span class="v">68 分</span></div>
+          <div class="drow" style="border:none"><span class="l"><span class="dot" style="background:var(--leaf)"></span>维D合成</span><span class="v">充足</span></div>
+          <div class="barw"><i style="width:92%;background:linear-gradient(90deg,var(--amber),var(--leaf))"></i><span class="seg3" style="left:33%"></span><span class="seg3" style="left:66%"></span></div>
+          <div class="drow" style="border:none;margin-top:6px"><span class="l"><span class="dot" style="background:var(--clay)"></span>累积紫外线</span><span class="v">4.5 SED</span></div>
+          <div class="barw"><i style="width:55%;background:var(--clay)"></i></div>
+          <div style="font-size:9px;color:#777;margin-top:5px">适宜区 · 距晒红阈值有余量</div>
+          <div class="sectit">今日时段分布</div>
+          <div style="position:relative;height:40px;border-bottom:1px solid #221f1a">
+            <div style="position:absolute;bottom:0;top:6px;left:20%;width:8%;background:#4a4234;border-radius:3px 3px 0 0"></div>
+            <div style="position:absolute;bottom:0;top:6px;left:42%;width:15%;background:var(--amber);opacity:.6;border-radius:3px 3px 0 0"></div>
+            <div style="position:absolute;bottom:0;top:6px;left:66%;width:6%;background:#4a4234;border-radius:3px 3px 0 0"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:8px;color:#777;margin-top:4px"><span>上午</span><span>午间</span><span>下午</span></div>
+        </div>
+        <div class="cap">③ 数据详情 · 椭圆长图</div>
+        <div class="scap">首屏上滑 · 竖滚</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 区2 提醒 -->
+  <div class="zone">
+    <div class="zt"><span class="b alt">提醒弹窗</span>仅保留促发行动的提醒</div>
+    <div class="zd">删"黄金时刻/达标祝贺"。保留：久坐补光 / 日落前兜底 / 高UV防晒。各自独立推送。</div>
+    <div class="flow">
+      <div class="item">
+        <div class="watch"><div class="wscr"><div class="pad">
+          <div class="nicon">🚶</div><div class="ntit">该去见见光了</div>
+          <div class="nbody">已室内 3 小时<br>今天还差 25 分钟达标</div><div class="nbtn">知道了</div>
+        </div></div></div>
+        <div class="cap">补光提醒</div><div class="scap">久坐+日照不足</div>
+      </div>
+      <div class="item">
+        <div class="watch"><div class="wscr"><div class="pad">
+          <div class="nicon">🌇</div><div class="ntit">太阳要落山了</div>
+          <div class="nbody">今日日照还差 25 分钟<br>趁日落前补一补？</div><div class="nbtn">知道了</div>
+        </div></div></div>
+        <div class="cap">日落兜底提醒</div><div class="scap">临近日落&未达标</div>
+      </div>
+      <div class="item">
+        <div class="watch"><div class="wscr"><div class="pad">
+          <div class="nicon warn">⚠️</div><div class="ntit warn">注意防晒</div>
+          <div class="nbody">紫外线很强（UV9）<br>户外请做好防晒</div><div class="nbtn" style="background:var(--clay)">知道了</div>
+        </div></div></div>
+        <div class="cap">高UV防晒预警</div><div class="scap">UVI≥8且在户外</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 区3 表盘组件 -->
+  <div class="zone">
+    <div class="zt"><span class="b">表盘 / 组件</span>聚合表盘 + 可添加组件</div>
+    <div class="zd">阳光聚合表盘：活动环 + 时间 + 维生素D胶囊大组件 + 底部三圆（阳光/UV量/UV指数）。组件可加到任意表盘。</div>
+    <div class="flow">
+      <div class="item">
+        <div class="watch"><div class="wscr"><div class="face2">
+          <div class="f2top"><div class="acts"><div class="r1"></div><div class="r2"></div></div><div class="f2t"><div class="d">29 周一</div><div class="h">16:28</div></div></div>
+          <div class="pill"><div class="pt">D<small>VITAMIN</small></div></div>
+          <div class="pilllab"><span>🟡 维生素 D</span><span class="o">充足</span></div>
+          <div class="three">
+            <div class="tc s"><div><div class="cn">68</div><div class="cl">阳光·分</div></div></div>
+            <div class="tc"><div><div class="cn">4.5</div><div class="cl">UV·SED</div></div></div>
+            <div class="tc"><div><div class="cn">4</div><div class="cl">UV指数</div></div></div>
+          </div>
+        </div></div></div>
+        <div class="cap">阳光聚合表盘</div>
+      </div>
+      <div class="item" style="align-self:flex-start;margin-top:6px">
+        <div class="comprow">
+          <div style="text-align:center"><div class="comp ringc"><div><div class="cv">68<small>分</small></div><div class="cl">阳光</div></div></div><div class="scap" style="margin-top:7px">日照时长</div></div>
+          <div style="text-align:center"><div class="comp"><div><div class="ci">🟢</div><div class="cv" style="font-size:13px;color:var(--leaf)">充足</div><div class="cl">维D合成</div></div></div><div class="scap" style="margin-top:7px">维生素D</div></div>
+          <div style="text-align:center"><div class="comp"><div><div class="cv" style="color:var(--clay)">4.5<small> SED</small></div><div class="cl">累积UV</div></div></div><div class="scap" style="margin-top:7px">累积紫外线</div></div>
+        </div>
+        <div class="cap" style="margin-top:13px">可添加组件（3个）</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">R64「阳光时长」表端高保真 · 2026 · 圆表深色底 + 蜜琥珀太阳笑脸 · 定位豆 · 行动型提醒 · 聚合表盘 · 仅供评审</div>
+</body>
+</html>

@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>R64 阳光时长 · 详情页高保真</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --amber:#E8A317;--amber-d:#C77F00;--honey:#F7C948;--honey-l:#FCE3A0;
+    --clay:#E07A3F;--leaf:#5B8C5A;--leaf-d:#3E6B3D;
+    --ink:#2A241C;--ink-2:#736A5C;--ink-3:#A89E8C;
+    --paper:#FBF6EC;--paper-2:#F2EADB;--card:#FFFDF8;--line:#ECE3D2;
+    --indigo:#3B4A6B;--indigo-l:#EDF0F6;--neg:#C2543B;
+    --rad:22px;
+    --serif:'Bricolage Grotesque',serif;--sans:'Sora',-apple-system,"PingFang SC",sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:var(--sans);color:var(--ink);
+    background:radial-gradient(1000px 480px at 18% -10%,#F7E8C6 0%,rgba(247,232,198,0) 55%),
+      radial-gradient(760px 420px at 90% 2%,#F1E3CC 0%,rgba(241,227,204,0) 50%),var(--paper);
+    padding:50px 36px 80px;min-height:100vh}
+  .wrap{max-width:1180px;margin:0 auto}
+  .head{margin-bottom:40px}
+  .kick{display:inline-flex;align-items:center;gap:9px;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--amber-d);background:#fff;padding:9px 17px;border-radius:999px;box-shadow:0 5px 20px rgba(232,163,23,.16)}
+  .kick::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--amber);box-shadow:0 0 0 4px rgba(232,163,23,.22)}
+  h1.t{font-family:var(--serif);font-size:46px;font-weight:800;letter-spacing:-.025em;margin:18px 0 10px}
+  h1.t em{font-style:normal;color:var(--amber-d)}
+  .sub{font-size:15px;color:var(--ink-2);max-width:720px;line-height:1.7}
+  .stage{display:flex;gap:36px;align-items:flex-start;flex-wrap:nowrap}
+  .wrap{max-width:none}
+
+  /* phone */
+  .phone{width:360px;background:var(--card);border-radius:46px;overflow:hidden;
+    box-shadow:0 36px 84px -24px rgba(80,55,15,.36),0 8px 24px rgba(0,0,0,.05);border:1px solid rgba(0,0,0,.05)}
+  .sbar{height:50px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;font-size:14px;font-weight:700}
+  .sbar .r{font-size:12px;color:var(--ink-2);font-weight:600}
+  .scr{padding:2px 17px 28px}
+  .nav{display:flex;align-items:center;justify-content:space-between;padding:6px 2px 6px;font-size:16px;font-weight:700}
+  .nav .bk{font-size:20px;color:var(--ink-2)}
+  .nav .set{width:34px;height:34px;border-radius:11px;background:var(--paper-2);display:grid;place-items:center;font-size:16px;color:var(--ink-2)}
+  .dateb{display:flex;align-items:center;justify-content:center;gap:24px;padding:6px 0 14px;font-size:14px;font-weight:700;color:var(--ink)}
+  .dateb .a{width:28px;height:28px;border-radius:50%;background:var(--paper-2);display:grid;place-items:center;color:var(--ink-3);font-size:15px}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--rad);padding:18px;margin-bottom:14px}
+  .ct{font-size:14.5px;font-weight:700;display:flex;align-items:center;justify-content:space-between}
+  .info{display:inline-grid;place-items:center;width:15px;height:15px;border-radius:50%;background:var(--paper-2);color:var(--ink-3);font-size:10px;font-weight:700;cursor:help;vertical-align:1px;margin-left:3px}
+  .muted{color:var(--ink-2)}.tiny{font-size:11.5px}.t3{color:var(--ink-3)}
+
+  /* ===== 太阳笑脸圆环 ===== */
+  .hero{position:relative;border:none;border-radius:24px;overflow:hidden;padding:20px 18px 18px;
+    background:linear-gradient(160deg,#FFF6E0 0%,#FCE9BD 100%);
+    display:flex;flex-direction:column;align-items:center}
+  .hero .glow{position:absolute;inset:0;background:radial-gradient(circle at 50% 40%,rgba(255,200,60,.42),rgba(255,200,60,0) 58%)}
+  .ringwrap{position:relative;width:162px;height:162px;flex-shrink:0}
+  .ringwrap svg{position:absolute;inset:0;transform:rotate(-90deg)}
+  .sun{position:absolute;inset:28px;border-radius:50%;
+    background:radial-gradient(circle at 42% 38%,#FFE08A,#F9B528 70%,#EC9A12);
+    box-shadow:0 7px 20px rgba(236,154,18,.45),inset 0 -5px 12px rgba(196,120,0,.3);
+    display:grid;place-items:center}
+  /* 笑脸 */
+  .face{width:100%;height:100%;position:relative}
+  .eye{position:absolute;top:37%;width:9px;height:12px;background:#6B3D00;border-radius:50%}
+  .eye.l{left:29%}.eye.r{right:29%}
+  .cheek{position:absolute;top:55%;width:11px;height:7px;background:rgba(232,90,40,.32);border-radius:50%}
+  .cheek.l{left:17%}.cheek.r{right:17%}
+  .mouth{position:absolute;left:50%;top:54%;transform:translateX(-50%);width:28px;height:15px;
+    border:0 solid #6B3D00;border-bottom-width:4px;border-radius:0 0 30px 30px}
+  .heroctr{position:relative;z-index:2;text-align:center;margin-top:10px}
+  .heroctr .big{font-family:var(--serif);font-size:38px;font-weight:800;color:#5A3E0B;line-height:1}
+  .heroctr .big small{font-size:15px;font-weight:700;color:#A07A28}
+  .heroctr .goal{display:inline-flex;align-items:center;gap:6px;margin-top:10px;font-size:12px;font-weight:700;color:#7A5A12;background:rgba(255,255,255,.62);padding:6px 13px;border-radius:999px;line-height:1.3}
+  .heroctr .goal b{color:#5A3E0B}
+  .heroctr .reach{font-family:var(--sans);font-size:13px;font-weight:800;color:var(--leaf-d);background:#EAF3E6;padding:4px 10px;border-radius:8px;vertical-align:7px;margin-left:6px}
+
+  /* 表情演示条 */
+  .moods{display:flex;gap:14px;flex-wrap:wrap;margin-top:18px}
+  .mood{text-align:center;width:104px}
+  .mood .mc{width:74px;height:74px;border-radius:50%;margin:0 auto 8px;position:relative;
+    background:radial-gradient(circle at 42% 38%,#FFE08A,#F9B528 70%,#EC9A12);box-shadow:0 5px 14px rgba(236,154,18,.35)}
+  .mood .mc.sleep{background:radial-gradient(circle at 42% 38%,#E8DCC2,#C9B79A 70%,#B0A07F)}
+  .mood .lab{font-size:11px;font-weight:700;color:var(--ink)}
+  .mood .pct{font-size:10px;color:var(--ink-3);font-weight:600;margin-top:2px}
+  .mface{position:absolute;inset:0}
+  .meye{position:absolute;top:36%;width:8px;height:10px;background:#6B3D00;border-radius:50%}
+  .meye.l{left:30%}.meye.r{right:30%}
+
+  /* 行动建议条 */
+  .advice{display:flex;align-items:center;gap:11px;background:linear-gradient(100deg,#FFF3D6,#FFFBF0);
+    border:1px solid var(--honey-l);border-radius:16px;padding:14px 15px;margin-bottom:14px}
+  .advice .ie{width:30px;height:30px;border-radius:50%;background:var(--honey);display:grid;place-items:center;flex-shrink:0;font-size:15px}
+  .advice .tx{font-size:12.5px;font-weight:600;color:#6B4E14;line-height:1.4}
+
+  /* UV 卡 */
+  .uvhead{display:flex;align-items:center;justify-content:space-between}
+  .skin{font-size:11.5px;font-weight:700;color:var(--clay);background:#FBEDE3;border:1px solid #F2D9C6;padding:5px 11px;border-radius:9px;display:flex;align-items:center;gap:5px}
+  .uvchart{height:108px;position:relative;margin:14px 0 4px;border-radius:12px;background:linear-gradient(180deg,#FFFBF2,#FFF7E8);overflow:hidden;border:1px solid var(--line)}
+  .uvchart .grad{position:absolute;inset:0;opacity:.0}
+  .uvcurve{position:absolute;left:0;right:0;top:0;height:100%}
+  .seg{position:absolute;top:0;bottom:20px;border-radius:5px 5px 0 0;display:flex;justify-content:center;align-items:flex-start;padding-top:5px;font-size:11px;
+    background:linear-gradient(180deg,rgba(232,163,23,.42),rgba(232,163,23,.14))}
+  .uvbase{position:absolute;left:0;right:0;bottom:0;height:20px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;padding:0 8px;font-size:9.5px;color:var(--ink-3);font-weight:600}
+  .axisnote{font-size:10.5px;color:var(--ink-3);line-height:1.5;margin-top:7px}
+  .divider{height:1px;background:var(--line);margin:15px 0 13px}
+  .dose-row{display:flex;align-items:baseline;justify-content:space-between}
+  .dose-row .lab{font-size:14px;font-weight:700}
+  .dose-row .v{font-family:var(--serif);font-size:20px;font-weight:800;color:var(--amber-d)}
+  .scale{display:flex;height:11px;border-radius:6px;overflow:hidden;margin-top:12px;position:relative}
+  .scale .s1{flex:1;background:#EBE3D2}.scale .s2{flex:1.5;background:#A8CF8E}.scale .s3{flex:1.2;background:#F2C94C}.scale .s4{flex:1;background:#E5895A}
+  .scale .mk{position:absolute;top:-4px;width:3px;height:19px;background:var(--ink);border-radius:2px;left:42%}
+  .scalelab{display:flex;justify-content:space-between;font-size:9.5px;color:var(--ink-3);font-weight:600;margin-top:6px}
+  .doseinfo{font-size:12px;color:var(--ink-2);font-weight:600;margin-top:10px}
+  .doseinfo .t3{display:block;color:var(--ink-3);font-weight:500;margin-top:4px;font-size:10.5px}
+
+  /* 维D 进度条三等份 */
+  .vdbar{position:relative;height:12px;border-radius:7px;background:var(--paper-2);margin-top:12px;overflow:hidden}
+  .vdbar .fill{position:absolute;left:0;top:0;bottom:0;width:92%;background:linear-gradient(90deg,var(--honey),var(--leaf))}
+  .vdbar .sep{position:absolute;top:0;bottom:0;width:2px;background:var(--card)}
+  .vdlab{display:flex;justify-content:space-between;font-size:9.5px;color:var(--ink-3);font-weight:600;margin-top:6px}
+
+  /* 睡眠两项 */
+  .sl{display:flex;align-items:center;gap:13px;padding:13px 0;border-bottom:1px solid var(--line)}
+  .sl:last-of-type{border:none}
+  .sl .ic{width:40px;height:40px;border-radius:12px;background:var(--indigo-l);display:grid;place-items:center;font-size:18px;flex-shrink:0}
+  .sl .tx{flex:1}.sl .tx .a{font-size:13.5px;font-weight:700}.sl .tx .b{font-size:11px;color:var(--ink-3);font-weight:600;margin-top:3px}
+  .sl .pc{font-size:12px;font-weight:800;color:var(--indigo);background:var(--indigo-l);padding:4px 9px;border-radius:8px}
+  .slmore{text-align:center;font-size:12.5px;font-weight:700;color:var(--indigo);padding:12px 0 2px}
+
+  /* 知识卡 */
+  .know{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+  .know:last-child{border:none}
+  .know .ic{width:46px;height:46px;border-radius:13px;background:linear-gradient(135deg,var(--honey-l),var(--honey));display:grid;place-items:center;font-size:20px;flex-shrink:0}
+  .know .a{font-size:13px;font-weight:700;flex:1}.know .go{color:var(--ink-3)}
+
+  /* ===== 弹窗 ===== */
+  .dlgphone{position:relative;min-height:720px}
+  .dim{position:absolute;inset:0;background:rgba(42,36,28,.34);z-index:5}
+  .sheet{position:absolute;left:0;right:0;bottom:0;background:var(--card);border-radius:26px 26px 46px 46px;padding:16px 20px 26px;z-index:6;box-shadow:0 -10px 40px rgba(0,0,0,.16)}
+  .sheet .grip{width:40px;height:4px;border-radius:3px;background:var(--paper-2);margin:0 auto 14px}
+  .sheet .stt{text-align:center;font-family:var(--serif);font-size:18px;font-weight:800;color:var(--ink)}
+  .sheet .ssub{text-align:center;font-size:11px;color:var(--ink-3);font-weight:500;margin-top:6px;line-height:1.5}
+  /* 滚轮 */
+  .wheel{position:relative;margin:14px 0 4px}
+  .wheel ul{list-style:none;text-align:center;position:relative}
+  .wheel li{height:42px;line-height:42px;font-size:16px;color:var(--ink-3);font-weight:600}
+  .wheel li.far{opacity:.4}
+  .wheel li.on{height:60px;font-family:var(--serif);font-size:26px;color:var(--ink);font-weight:800;
+    background:linear-gradient(100deg,#FFF3D6,#FFFBF0);border:1px solid var(--honey-l);border-radius:14px;margin:6px 4px;
+    display:flex;align-items:center;justify-content:center;gap:10px}
+  .wheel li .u{font-size:13px;color:var(--ink-3);font-weight:600}
+  .wheel li.on .u{font-size:14px;color:var(--ink-2);font-weight:700}
+  .wtag{display:inline-block;font-size:11.5px;font-weight:700;color:#fff;background:var(--amber);border-radius:7px;padding:3px 11px;font-family:var(--sans)}
+  /* 弹窗按钮 */
+  .dbtns{display:flex;gap:12px;margin-top:18px}
+  .dbtns .b{flex:1;text-align:center;padding:14px 0;border-radius:14px;font-size:14.5px;font-weight:700}
+  .dbtns .cancel{background:var(--paper-2);color:var(--ink-2)}
+  .dbtns .save{background:linear-gradient(120deg,var(--amber),var(--amber-d));color:#fff;box-shadow:0 6px 16px rgba(232,163,23,.32)}
+  /* 肤质项 */
+  .skinopt{display:flex;align-items:center;gap:12px;padding:15px 4px;border-bottom:1px solid var(--line)}
+  .skinopt:last-of-type{border:none}
+  .skinopt .tx{flex:1}
+  .skinopt .tx .a{font-size:14px;font-weight:700;color:var(--ink)}
+  .skinopt .tx .b{font-size:11px;color:var(--ink-3);font-weight:500;margin-top:4px;line-height:1.4}
+  .skinopt .rd{width:20px;height:20px;border-radius:50%;border:1.8px solid var(--line);flex-shrink:0}
+  .skinopt.on{background:linear-gradient(100deg,#FFF8E8,transparent);border-radius:12px;margin:0 -6px;padding:15px 10px}
+  .skinopt.on .rd{border:6px solid var(--amber)}
+  .dnote{font-size:11px;color:var(--ink-2);background:var(--paper);border:1px solid var(--line);border-radius:11px;padding:11px 13px;margin-top:14px;line-height:1.5}
+
+  .note{margin-top:46px;font-size:12px;color:var(--ink-3);line-height:1.7}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <span class="kick">R64 · Detail · Hi-Fi</span>
+    <h1 class="t">阳光时长 · <em>详情页</em>高保真</h1>
+    <p class="sub">蜜琥珀色系 · 圆环采用会随进度变表情的「太阳笑脸」做情感化引导。右侧为四档表情演示。</p>
+  </div>
+
+  <div class="stage">
+    <!-- 详情页 -->
+    <div class="phone">
+      <div class="sbar"><span>9:41</span><span class="r">5G · 100%</span></div>
+      <div class="scr">
+        <div class="nav"><span class="bk">‹</span><span>阳光时长</span><span class="set">⚙</span></div>
+        <div class="dateb"><span class="a">‹</span>6月24日 周三<span class="a">›</span></div>
+
+        <!-- 太阳笑脸圆环（达标·大笑·横排压缩） -->
+        <div class="hero card">
+          <div class="glow"></div>
+          <div class="ringwrap">
+            <svg width="162" height="162" viewBox="0 0 162 162">
+              <circle cx="81" cy="81" r="73" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="10"/>
+              <circle cx="81" cy="81" r="73" fill="none" stroke="#E8A317" stroke-width="10" stroke-linecap="round"
+                stroke-dasharray="458.7" stroke-dashoffset="60"/>
+            </svg>
+            <div class="sun">
+              <div class="face">
+                <div class="eye l"></div><div class="eye r"></div>
+                <div class="cheek l"></div><div class="cheek r"></div>
+                <div class="mouth"></div>
+              </div>
+            </div>
+          </div>
+          <div class="heroctr">
+            <div class="big">68<small> 分钟</small> <span class="reach">达成113%</span></div>
+            <div class="goal">🎯 目标 <b>60分钟</b> · 提升睡眠质量</div>
+          </div>
+        </div>
+
+        <!-- 行动建议条 -->
+        <div class="advice">
+          <div class="ie">☀</div>
+          <div class="tx">今日阳光已达标，当前紫外线偏强，外出注意遮阳防晒。</div>
+        </div>
+
+        <!-- ③ 紫外线卡 -->
+        <div class="card">
+          <div class="uvhead">
+            <span class="ct">今日紫外线 & 光照时段 <span class="info" title="色块=日照时段（宽=该时段时长，标☀）；虚线=紫外线强弱；两端=日出/日落">ⓘ</span></span>
+            <span class="skin">🧑 肤质 III型 ▸</span>
+          </div>
+          <div class="uvchart">
+            <svg class="uvcurve" viewBox="0 0 300 108" preserveAspectRatio="none">
+              <path d="M0,96 C70,90 110,30 150,26 C190,30 240,78 300,98" fill="none" stroke="#E8A317" stroke-width="2.5" stroke-dasharray="4 4" opacity=".75"/>
+            </svg>
+            <div class="seg" style="left:16%;width:8%">☀</div>
+            <div class="seg" style="left:38%;width:17%">☀</div>
+            <div class="seg" style="left:64%;width:6%">☀</div>
+            <div class="uvbase"><span>🌅6:02</span><span>10时</span><span>14时</span><span>18时</span><span>🌇19:04</span></div>
+          </div>
+          <div class="divider" style="margin-top:12px"></div>
+          <div class="dose-row"><span class="lab">今日累积紫外线量 <span class="info" title="累积紫外线量 = Σ(各时段UVI/40 × 该时段日照时长)，单位SED（标准红斑剂量）。按肤质估算晒红阈值（点右上角切换肤质）。基于天气UVI×日照时长推算，非皮肤实测，仅供参考。">ⓘ</span></span><span class="v">约 4.5 SED</span></div>
+          <div class="scale"><span class="s1"></span><span class="s2"></span><span class="s3"></span><span class="s4"></span><span class="mk"></span></div>
+          <div class="scalelab"><span>不足</span><span>适宜</span><span>偏多</span><span>近晒红</span></div>
+          <div class="doseinfo">▲ 当前处于「适宜」区，距晒红阈值还有余量</div>
+        </div>
+
+        <!-- ④ 维D 进度条三等份 -->
+        <div class="card">
+          <div class="ct">阳光合成维生素 D<span class="tiny" style="color:var(--leaf-d);font-weight:800;background:#EAF3E6;padding:3px 10px;border-radius:7px">充足</span></div>
+          <div class="vdbar">
+            <div class="fill"></div>
+            <div class="sep" style="left:33.3%"></div><div class="sep" style="left:66.6%"></div>
+          </div>
+          <div class="vdlab"><span>较低</span><span>适宜</span><span>充足</span></div>
+          <div class="tiny t3" style="margin-top:9px">今日日照已满足维 D 基础所需 · 定性参考</div>
+        </div>
+
+        <!-- ⑤ 睡眠两项 -->
+        <div class="card">
+          <div class="ct" style="margin-bottom:4px">日照对睡眠质量的影响</div>
+          <div class="sl">
+            <div class="ic">🌅</div>
+            <div class="tx"><div class="a">晨间晒太阳 ↔ 睡眠质量</div><div class="b">有晨晒的日子，睡眠质量平均更高</div></div>
+            <span class="pc">↑ 9%</span>
+          </div>
+          <div class="sl">
+            <div class="ic">⏱️</div>
+            <div class="tx"><div class="a">日照时长 ↔ 睡眠质量</div><div class="b">日照达标的日子，睡眠质量平均更高</div></div>
+            <span class="pc">↑ 6%</span>
+          </div>
+          <div class="slmore">查看睡眠影响因素 ›</div>
+        </div>
+
+        <!-- ⑥ 知识卡 -->
+        <div class="card">
+          <div class="know"><div class="ic">📡</div><div class="a">穿戴设备如何计算日照时长？</div><span class="go">›</span></div>
+          <div class="know"><div class="ic">🌿</div><div class="a">晒太阳为什么对身体重要？</div><span class="go">›</span></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 状态变体 1：未晒太阳 -->
+    <div class="phone">
+      <div class="sbar"><span>9:41</span><span class="r">状态① · 还没晒</span></div>
+      <div class="scr">
+        <div class="nav"><span class="bk">‹</span><span>阳光时长</span><span class="set">⚙</span></div>
+        <div class="dateb"><span class="a">‹</span>6月24日 周三<span class="a">›</span></div>
+
+        <!-- 太阳·睡眠脸（未开始，圆环极低） -->
+        <div class="hero card">
+          <div class="glow" style="background:radial-gradient(circle at 50% 40%,rgba(255,200,60,.2),rgba(255,200,60,0) 58%)"></div>
+          <div class="ringwrap">
+            <svg width="162" height="162" viewBox="0 0 162 162">
+              <circle cx="81" cy="81" r="73" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="10"/>
+              <circle cx="81" cy="81" r="73" fill="none" stroke="#E8A317" stroke-width="10" stroke-linecap="round"
+                stroke-dasharray="458.7" stroke-dashoffset="448"/>
+            </svg>
+            <div class="sun" style="background:radial-gradient(circle at 42% 38%,#FBEFD3,#EAD9B4 70%,#D8C49A);box-shadow:0 7px 20px rgba(180,150,90,.3),inset 0 -5px 12px rgba(150,120,70,.25)">
+              <div class="face">
+                <div style="position:absolute;top:39%;left:28%;width:15px;height:4px;background:#7A6A45;border-radius:3px"></div>
+                <div style="position:absolute;top:39%;right:28%;width:15px;height:4px;background:#7A6A45;border-radius:3px"></div>
+                <div style="position:absolute;top:57%;left:50%;transform:translateX(-50%);width:14px;height:14px;border:3px solid #7A6A45;border-radius:50%;border-top-color:transparent"></div>
+                <div style="position:absolute;top:16%;right:13%;font-size:15px">💤</div>
+              </div>
+            </div>
+          </div>
+          <div class="heroctr">
+            <div class="big">0<small> 分钟</small> <span class="reach" style="color:var(--ink-2);background:var(--paper-2)">未开始</span></div>
+            <div class="goal">🎯 目标 <b>60分钟</b> · 提升睡眠质量</div>
+          </div>
+        </div>
+
+        <!-- 行动建议：补光引导 -->
+        <div class="advice">
+          <div class="ie">🌤️</div>
+          <div class="tx">今天还没晒太阳，现在户外光照正好，出门走 15 分钟开个头吧。</div>
+        </div>
+
+        <!-- 紫外线卡：有UV但无日照时段 -->
+        <div class="card">
+          <div class="uvhead">
+            <span class="ct">今日紫外线 & 光照时段 <span class="info">ⓘ</span></span>
+            <span class="skin">🧑 肤质 III型 ▸</span>
+          </div>
+          <div class="uvchart">
+            <svg class="uvcurve" viewBox="0 0 300 108" preserveAspectRatio="none">
+              <path d="M0,96 C70,90 110,30 150,26 C190,30 240,78 300,98" fill="none" stroke="#E8A317" stroke-width="2.5" stroke-dasharray="4 4" opacity=".75"/>
+            </svg>
+            <div class="uvbase"><span>🌅6:02</span><span>10时</span><span>14时</span><span>18时</span><span>🌇19:04</span></div>
+          </div>
+          <div class="divider" style="margin-top:12px"></div>
+          <div class="dose-row"><span class="lab">今日累积紫外线量 <span class="info">ⓘ</span></span><span class="v" style="color:var(--ink-3)">0 SED</span></div>
+          <div class="scale"><span class="s1"></span><span class="s2"></span><span class="s3"></span><span class="s4"></span><span class="mk" style="left:0%"></span></div>
+          <div class="scalelab"><span>不足</span><span>适宜</span><span>偏多</span><span>近晒红</span></div>
+          <div class="doseinfo">今天还没有日照记录，出门晒晒就会开始累计</div>
+        </div>
+
+        <!-- 维D：空 -->
+        <div class="card">
+          <div class="ct">阳光合成维生素 D<span class="tiny" style="color:var(--ink-3);font-weight:800;background:var(--paper-2);padding:3px 10px;border-radius:7px">较低</span></div>
+          <div class="vdbar"><div class="fill" style="width:4%;background:var(--ink-3)"></div><div class="sep" style="left:33.3%"></div><div class="sep" style="left:66.6%"></div></div>
+          <div class="vdlab"><span>较低</span><span>适宜</span><span>充足</span></div>
+          <div class="tiny t3" style="margin-top:9px">今日尚未通过阳光合成维 D · 定性参考</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 状态变体 2：阴雨天 -->
+    <div class="phone">
+      <div class="sbar"><span>9:41</span><span class="r">状态② · 阴雨天</span></div>
+      <div class="scr">
+        <div class="nav"><span class="bk">‹</span><span>阳光时长</span><span class="set">⚙</span></div>
+        <div class="dateb"><span class="a">‹</span>6月26日 周五<span class="a">›</span></div>
+
+        <!-- 太阳·云朵中性脸（圆环转灰，不显未达标） -->
+        <div class="hero card" style="background:linear-gradient(160deg,#EEF1F4 0%,#E3E8ED 100%)">
+          <div class="glow" style="background:radial-gradient(circle at 50% 40%,rgba(140,160,180,.18),rgba(140,160,180,0) 58%)"></div>
+          <div class="ringwrap">
+            <svg width="162" height="162" viewBox="0 0 162 162">
+              <circle cx="81" cy="81" r="73" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="10"/>
+              <circle cx="81" cy="81" r="73" fill="none" stroke="#C2CAD3" stroke-width="10" stroke-linecap="round"
+                stroke-dasharray="458.7" stroke-dashoffset="458.7"/>
+            </svg>
+            <div class="sun" style="background:radial-gradient(circle at 42% 38%,#F2F4F7,#D6DCE3 70%,#BFC7D0);box-shadow:0 7px 20px rgba(120,135,150,.28),inset 0 -5px 12px rgba(110,125,140,.22)">
+              <div class="face">
+                <div style="position:absolute;top:40%;left:29%;width:9px;height:11px;background:#6B7682;border-radius:50%"></div>
+                <div style="position:absolute;top:40%;right:29%;width:9px;height:11px;background:#6B7682;border-radius:50%"></div>
+                <div style="position:absolute;top:58%;left:50%;transform:translateX(-50%);width:18px;height:3px;background:#6B7682;border-radius:3px"></div>
+                <div style="position:absolute;top:8%;left:6%;font-size:20px">☁️</div>
+                <div style="position:absolute;bottom:6%;right:10%;font-size:14px">🌧️</div>
+              </div>
+            </div>
+          </div>
+          <div class="heroctr">
+            <div class="big" style="color:#5A6470;font-size:22px">今日不宜晒太阳</div>
+            <div class="goal" style="background:rgba(255,255,255,.7);color:#5A6470">🌧️ 紫外线弱 · 天气原因 · 已自动免打卡</div>
+          </div>
+        </div>
+
+        <!-- 行动建议：阴雨免责 -->
+        <div class="advice" style="background:linear-gradient(100deg,#EEF1F4,#F6F8FA);border-color:#DDE3E9">
+          <div class="ie" style="background:#C9D2DB">🪟</div>
+          <div class="tx" style="color:#54606E">今天紫外线弱，不强求晒太阳——这很正常。靠窗待一会儿，对白天清醒和昼夜节律也有帮助。</div>
+        </div>
+
+        <!-- 替代建议 -->
+        <div class="card">
+          <div class="ct" style="margin-bottom:12px">今天可以这样做</div>
+          <div style="display:flex;gap:10px">
+            <div style="flex:1;background:var(--paper);border-radius:14px;padding:14px 8px;text-align:center"><div style="font-size:22px">🪟</div><div style="font-size:12px;font-weight:700;margin-top:7px">靠窗自然光</div><div style="font-size:10px;color:var(--ink-3);font-weight:600;margin-top:3px;line-height:1.4">仍助清醒与节律</div></div>
+            <div style="flex:1;background:var(--paper);border-radius:14px;padding:14px 8px;text-align:center"><div style="font-size:22px">🐟</div><div style="font-size:12px;font-weight:700;margin-top:7px">维D饮食</div><div style="font-size:10px;color:var(--ink-3);font-weight:600;margin-top:3px;line-height:1.4">深海鱼·蛋黄·奶</div></div>
+            <div style="flex:1;background:var(--paper);border-radius:14px;padding:14px 8px;text-align:center"><div style="font-size:22px">📅</div><div style="font-size:12px;font-weight:700;margin-top:7px">周末再补</div><div style="font-size:10px;color:var(--ink-3);font-weight:600;margin-top:3px;line-height:1.4">周六晴·适合户外</div></div>
+          </div>
+        </div>
+
+        <!-- 连续记录保护说明 -->
+        <div class="card" style="background:var(--paper);border-style:dashed">
+          <div class="tiny" style="color:var(--ink-2);font-weight:600;line-height:1.6;text-align:center">✓ 阴雨天不计入连续记录中断<br>把日照当"晴天的健康奖励"，而非每日必做任务</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 弹窗 A：目标设定 -->
+    <div class="phone dlgphone">
+      <div class="sbar"><span>9:41</span><span class="r">弹窗 · 目标设定</span></div>
+      <div class="scr" style="filter:saturate(.9)">
+        <div class="nav"><span class="bk">‹</span><span>阳光时长</span><span class="set" style="background:var(--honey-l);color:var(--amber-d)">⚙</span></div>
+        <div class="dateb"><span class="a">‹</span>6月24日 周三<span class="a">›</span></div>
+        <div class="hero card" style="opacity:.55">
+          <div class="ringwrap" style="width:120px;height:120px">
+            <svg width="120" height="120" viewBox="0 0 162 162"><circle cx="81" cy="81" r="73" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="10"/><circle cx="81" cy="81" r="73" fill="none" stroke="#E8A317" stroke-width="10" stroke-linecap="round" stroke-dasharray="458.7" stroke-dashoffset="60"/></svg>
+            <div class="sun"><div class="face"><div class="eye l"></div><div class="eye r"></div><div class="mouth"></div></div></div>
+          </div>
+          <div class="heroctr"><div class="big">68<small> 分钟</small></div></div>
+        </div>
+      </div>
+      <div class="dim"></div>
+      <div class="sheet">
+        <div class="grip"></div>
+        <div class="stt">日照目标设定</div>
+        <div class="wheel">
+          <ul>
+            <li class="far">30 <span class="u">分钟</span></li>
+            <li class="on">45 <span class="u">分钟</span> <span class="wtag">提升睡眠质量</span></li>
+            <li>60 <span class="u">分钟</span></li>
+            <li class="far">80 <span class="u">分钟</span></li>
+          </ul>
+        </div>
+        <div class="dbtns"><div class="b cancel">取消</div><div class="b save">保存</div></div>
+      </div>
+    </div>
+
+    <!-- 弹窗 B：肤质选择 -->
+    <div class="phone dlgphone">
+      <div class="sbar"><span>9:41</span><span class="r">弹窗 · 肤质选择</span></div>
+      <div class="scr" style="filter:saturate(.9)">
+        <div class="nav"><span class="bk">‹</span><span>阳光时长</span><span class="set">⚙</span></div>
+        <div class="card" style="opacity:.5;margin-top:8px">
+          <div class="uvhead"><span class="ct">今日紫外线 & 光照时段</span><span class="skin">🧑 肤质 III型 ▸</span></div>
+          <div style="height:70px;border-radius:12px;background:linear-gradient(180deg,#FFFBF2,#FFF7E8);border:1px solid var(--line);margin-top:12px"></div>
+        </div>
+      </div>
+      <div class="dim"></div>
+      <div class="sheet">
+        <div class="grip"></div>
+        <div class="stt">选择你的肤质</div>
+        <div class="ssub">用于估算你的晒红阈值与紫外线照射量（Fitzpatrick 分型）</div>
+        <div style="margin-top:14px">
+          <div class="skinopt">
+            <div class="tx"><div class="a">I–II 型 · 浅肤色</div><div class="b">几乎不晒黑、很易晒伤 · 晒红阈值低</div></div>
+            <div class="rd"></div>
+          </div>
+          <div class="skinopt on">
+            <div class="tx"><div class="a">III–IV 型 · 中等肤色（多数亚洲人）</div><div class="b">会晒黑、有时晒伤 · 晒红阈值中等</div></div>
+            <div class="rd"></div>
+          </div>
+          <div class="skinopt">
+            <div class="tx"><div class="a">V–VI 型 · 深肤色</div><div class="b">不易晒伤、容易晒黑 · 晒红阈值高</div></div>
+            <div class="rd"></div>
+          </div>
+        </div>
+        <div class="dnote">💡 可在「设置」中随时修改；不确定时建议选 III–IV 型。</div>
+        <div class="dbtns"><div class="b cancel">取消</div><div class="b save">确定</div></div>
+      </div>
+    </div>
+  </div>
+
+  <p style="max-width:1180px;margin:24px auto 0;font-size:12.5px;color:var(--ink-2);line-height:1.8"><b>常规达标态</b>（已确定方案）　|　<b>状态①未晒太阳</b>：睡眠脸💤+圆环近空+"未开始"+补光引导，数据归零但鼓励不惩罚　|　<b>状态②阴雨天</b>：云朵中性脸+圆环转灰+"今日不宜晒太阳/已免打卡"+替代建议　|　<b>弹窗A目标设定</b>：滚轮选时长，选中数字右侧带功能标签（30维D/45提升睡眠质量/80护眼）　|　<b>弹窗B肤质选择</b>：三档纯文字+简述，回写晒红阈值。</p>
+
+  <div class="note">R64「阳光时长」详情页高保真 · 2026 · 蜜琥珀自有视觉 · 太阳笑脸情绪引导 · 仅供评审</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>R64 阳光时长功能 · 原型</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:-apple-system,"PingFang SC",sans-serif;
+    background:radial-gradient(900px 480px at 20% -10%,#F7E8C6 0%,rgba(247,232,198,0) 55%),#FBF6EC;
+    color:#2A241C;min-height:100vh;padding:60px 24px;display:flex;flex-direction:column;align-items:center}
+  .kick{display:inline-flex;align-items:center;gap:9px;font-size:11px;font-weight:700;letter-spacing:.2em;
+    text-transform:uppercase;color:#C77F00;background:#fff;padding:9px 17px;border-radius:999px;
+    box-shadow:0 5px 20px rgba(232,163,23,.16)}
+  .kick::before{content:"";width:7px;height:7px;border-radius:50%;background:#E8A317;box-shadow:0 0 0 4px rgba(232,163,23,.22)}
+  h1{font-size:40px;font-weight:800;letter-spacing:-.02em;margin:18px 0 10px;text-align:center}
+  h1 em{font-style:normal;color:#C77F00}
+  .sub{font-size:15px;color:#736A5C;max-width:560px;line-height:1.7;text-align:center;margin-bottom:44px}
+  .cards{display:flex;gap:24px;flex-wrap:wrap;justify-content:center;max-width:760px}
+  a.card{display:block;width:340px;background:#FFFDF8;border:1px solid #ECE3D2;border-radius:22px;
+    padding:28px 26px;text-decoration:none;color:inherit;transition:.2s;
+    box-shadow:0 8px 28px -16px rgba(80,55,15,.3)}
+  a.card:hover{transform:translateY(-4px);box-shadow:0 18px 44px -18px rgba(80,55,15,.42);border-color:#E8A317}
+  .ico{font-size:34px;margin-bottom:14px}
+  .ct{font-size:20px;font-weight:800;margin-bottom:8px}
+  .cd{font-size:13.5px;color:#736A5C;line-height:1.6}
+  .go{margin-top:18px;font-size:13px;font-weight:700;color:#C77F00;display:inline-flex;align-items:center;gap:6px}
+  .foot{margin-top:54px;font-size:12px;color:#A89E8C}
+</style>
+</head>
+<body>
+  <span class="kick">R64 · Sunlight</span>
+  <h1>阳光时长功能 · <em>原型</em></h1>
+  <p class="sub">围绕日照时长与紫外线曝晒的健康表达，含手机端详情页与手表端高保真两份原型。</p>
+  <div class="cards">
+    <a class="card" href="detail.html">
+      <div class="ico">📱</div>
+      <div class="ct">详情页高保真</div>
+      <div class="cd">手机端「太阳笑脸圆环」进度表达，覆盖日照时长、紫外线曝晒、目标设定等核心场景。</div>
+      <span class="go">查看原型 →</span>
+    </a>
+    <a class="card" href="watch.html">
+      <div class="ico">⌚</div>
+      <div class="ct">表端高保真</div>
+      <div class="cd">圆表端阳光时长展示：表盘、应用主流程、提醒弹屏与可添加组件。</div>
+      <span class="go">查看原型 →</span>
+    </a>
+  </div>
+  <div class="foot">小米运动健康 · R64 项目</div>
+</body>
+</html>
